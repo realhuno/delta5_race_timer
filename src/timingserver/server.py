@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import gevent
 import gevent.monkey
+import requests
 gevent.monkey.patch_all()
 
 import json
@@ -16,7 +17,6 @@ import argparse
 parser = argparse.ArgumentParser(description='Timing Server')
 parser.add_argument('--mock', dest='mock', action='store_true', default=False, help="use mock data for testing")
 args = parser.parse_args()
-
 sys.path.append('../delta5interface')
 if args.mock or sys.platform.lower().startswith('win'):
     from MockInterface import get_hardware_interface
@@ -36,7 +36,7 @@ socketio = SocketIO(app, async_mode=async_mode)
 heartbeat_thread = None
 
 firmware_version = {'major': 0, 'minor': 1}
-
+lastround=0.0
 def parse_json(data):
     if isinstance(data, basestring):
         return json.loads(data)
@@ -146,10 +146,43 @@ def on_simulate_pass(data):
     index = data['node']
     # todo: how should frequency be sent?
     emit('pass_record', {'node': index, 'frequency': hardwareInterface.nodes[index].frequency, 'timestamp': hardwareInterface.milliseconds()}, broadcast=True)
+    API_ENDPOINT = "http://192.168.42.1/api/v1/lap_track"
+ 
+    # your API key here
+    transponder=index
+ 
+    data = {'transponder_token':transponder,'lap_time_in_ms':hardwareInterface.milliseconds()}
+ 
+    # sending post request and saving response as response object
+    r = requests.post(url = API_ENDPOINT, data = data)
+ 
+    # extracting response text 
+    pastebin_url = r.text
+    print("The pastebin URL is:%s"%pastebin_url)
 
 def pass_record_callback(node, ms_since_lap):
     print('Pass record from {0}{1}: {2}, {3}'.format(node.index, node.frequency, ms_since_lap, hardwareInterface.milliseconds() - ms_since_lap))
     #TODO: clean this up
+    # your API key here
+    API_ENDPOINT = "http://192.168.42.1/api/v1/lap_track"
+    transponder=node.index+1
+    currenttime=hardwareInterface.milliseconds()- ms_since_lap
+    
+    print "##"
+    print node.index+1
+    print "##"
+    print currenttime
+    print "##"
+    print lastround
+    print "##"
+    # sending post request and saving response as response object
+    data = {'transponder_token':transponder,'lap_time_in_ms':currenttime}
+    r = requests.post(url = API_ENDPOINT, data = data)
+ 
+    # extracting response text 
+    pastebin_url = r.text
+    print("The pastebin URL is:%s"%pastebin_url)
+
     socketio.emit('pass_record', {
         'node': node.index,
         'frequency': node.frequency,
