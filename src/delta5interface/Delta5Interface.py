@@ -136,7 +136,14 @@ class Delta5Interface(BaseHardwareInterface):
             if data != None:
                 lap_id = data[0]
                 ms_since_lap = unpack_32(data[1:])
-                node.current_rssi = unpack_16(data[5:])
+                if node.index==0:
+                    node.current_rssi = unpack_16(data[5:])+18
+                if node.index==1:
+				    node.current_rssi = unpack_16(data[5:])
+                if node.index==2:
+                    node.current_rssi = unpack_16(data[5:])+35
+                if node.index==3:
+                    node.current_rssi = unpack_16(data[5:])
                 node.trigger_rssi = unpack_16(data[7:])
                 node.peak_rssi_raw = unpack_16(data[9:])
                 node.peak_rssi = unpack_16(data[11:])
