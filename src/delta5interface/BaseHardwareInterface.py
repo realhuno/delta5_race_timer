@@ -31,7 +31,7 @@ class BaseHardwareInterface(object):
 
     def get_heartbeat_json(self):
         return {
-            'current_rssi': [node.current_rssi for node in self.nodes],
+			'current_rssi': [node.current_rssi for node in self.nodes],
             'loop_time': [node.loop_time for node in self.nodes]
         }
 

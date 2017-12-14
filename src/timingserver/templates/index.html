@@ -93,6 +93,56 @@
                 get_timestamp();
             };
 
+			
+			 reset0 = function() {
+                    $('#lap_table_0').empty();
+                    $('#peak_rssi_0').html(0);
+                    $('#peak_rssi_bar_0').css("width", normalize_rssi(0)+'%');
+                    $('#trigger_rssi_0').html(0);
+                    $('#trigger_rssi_bar_0').css("width", normalize_rssi(0)+'%');
+                socket.emit('reset_auto_calibration', {node: 0});
+                get_timestamp();
+            };
+
+			reset1 = function() {
+					$('#lap_table_1').empty();
+                    $('#peak_rssi_1').html(0);
+                    $('#peak_rssi_bar_1').css("width", normalize_rssi(0)+'%');
+                    $('#trigger_rssi_1').html(0);
+                    $('#trigger_rssi_bar_1').css("width", normalize_rssi(0)+'%');
+                socket.emit('reset_auto_calibration', {node: 1});
+                get_timestamp();
+            };
+			
+			reset2 = function() {
+					$('#lap_table_2').empty();
+                    $('#peak_rssi_2').html(0);
+                    $('#peak_rssi_bar_2').css("width", normalize_rssi(0)+'%');
+                    $('#trigger_rssi_2').html(0);
+                    $('#trigger_rssi_bar_2').css("width", normalize_rssi(0)+'%');
+                socket.emit('reset_auto_calibration', {node: 2});
+                get_timestamp();
+            };
+			
+			
+			reset3 = function() {
+					$('#lap_table_3').empty();
+                    $('#peak_rssi_3').html(0);
+                    $('#peak_rssi_bar_3').css("width", normalize_rssi(0)+'%');
+                    $('#trigger_rssi_3').html(0);
+                    $('#trigger_rssi_bar_3').css("width", normalize_rssi(0)+'%');
+                socket.emit('reset_auto_calibration', {node: 3});
+                get_timestamp();
+            };
+			
+			
+			
+			
+			
+			
+			
+			
+			
             function set_frequency(index) {
                 return function(event) {
                     var data = {
@@ -114,6 +164,9 @@
                 }
             }
 
+			
+			
+			
             $('form#set_calibration_threshold').submit(function() {
                 var data = {
                     calibration_threshold: parseInt($('#calibration_threshold_value').val())
@@ -183,6 +236,7 @@
                             <form id="simulate_pass_${index}" method="POST" action="#">
                                 <input class="btn btn-default btn-sm" type="submit" value="Simulate Pass">
                             </form>
+					
                             </div>
                             <table class="table">
                                 <tbody id="lap_table_${index}">
@@ -199,6 +253,7 @@
                 for (i=0; i<msg.nodes.length; i++) {
                     $('form#set_frequency_' + i).submit(set_frequency(i));
                     $('form#simulate_pass_' + i).submit(simulate_pass(i));
+	
                 }
 
                 $('#calibration_threshold_value').val(msg.calibration_threshold);
@@ -345,6 +400,10 @@
                         <button class="btn" onclick="get_timestamp()">Get Timestamp</button>
                         <button class="btn" onclick="get_settings()">Get Settings</button>
                         <button class="btn btn-space btn-danger" onclick="reset()">Reset</button>
+						 <button class="btn btn-space btn-danger" onclick="reset0()">Reset Node0</button>
+						  <button class="btn btn-space btn-danger" onclick="reset1()">Reset Node1</button>
+						   <button class="btn btn-space btn-danger" onclick="reset2()">Reset Node2</button>
+						    <button class="btn btn-space btn-danger" onclick="reset3()">Reset Node3</button>
                     </div>
                 </div>
             </div>
