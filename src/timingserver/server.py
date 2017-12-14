@@ -173,7 +173,7 @@ def pass_record_callback(node, ms_since_lap):
     
 	currenttime=hardwareInterface.milliseconds() - ms_since_lap
     #currenttime=ms_since_lap*10
-	f = open('lasttime.txt', 'r')
+	f = open('%slasttime.txt' % transponder, 'r')
 	lastround = f.readline()
 	f.close()
 	
@@ -198,7 +198,7 @@ def pass_record_callback(node, ms_since_lap):
     # extracting response text 
 	pastebin_url = r.text
 	print("The pastebin URL is:%s"%pastebin_url)
-	f = open('lasttime.txt','w')
+	f = open('%slasttime.txt' % transponder,'w')
 	f.write(str(currenttime))
 	f.close()
 	socketio.emit('pass_record', {
